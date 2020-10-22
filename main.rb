@@ -23,7 +23,7 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
 
     n_array = []
-    to_a.my_each do |i| n_array << i if yield(item) end
+    to_a.my_each do |i| n_array << i if yield(i) end
     n_array
   end
 
@@ -57,6 +57,30 @@ module Enumerable
   def my_none?(value = nil, &block)
     !to_a.my_any?(value, &block)
   end
+
+  def my_count?(value = nil)
+    count = 0
+    if block_given?
+      to_a.my_each do |i| count += 1 if yield(i) end
+    elsif value.nil?
+      count = to_a.length
+    else
+      count = to_a.my_select do |i| i == value end.length
+    end
+    count
+  end
+
+  def my_map(value = nil)
+    return to_enum(:my_map) unless block_given? || !value.nil?
+
+    array = []
+    if value.nil?
+      to_a.each do |i| array << yield(i) end
+    else
+      to_a.each do |i| array << value.call(i) end
+    end
+    array
+  end
 end
 
 
@@ -77,3 +101,13 @@ puts %w[ant bear cat].my_none?(/d/)                        #=> true
 puts [nil, true, 99].my_none?(Integer)                     #=> false
 puts [nil, true, 99].my_none?                              #=> false
 puts [].my_none?                                           #=> true
+
+puts "my_count?"
+
+puts %w[ant bear cat].my_count?
+puts %w[ant bear cat].my_count?("bear")
+puts %w[ant bear cat cat].my_count? { |n| n == "cat" }
+
+puts "my_map"
+
+puts [2, 3, 6].my_map { |n| n*2 }
