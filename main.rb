@@ -38,7 +38,29 @@ module Enumerable
     end
     true
   end
+
+  def my_any?(param = nil)
+    if block_given?
+      to_a.my_each do |i| return false if yield(i) == false && i.nil? end
+      return true
+    elsif 
+      to_a.my_each do |i| return false if i == false end
+      return true
+    elsif
+      to_a.my_each do |i| return true if i.class == param end
+    else 
+        to_a.my_each do |i| return true if i == param end
+    end
+    false
+  end
 end
 
-a = [2, 1, 2, 2]
-puts a.my_all?
+
+puts "my_any test"
+
+puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
+puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
+puts %w[ant bear cat].my_any?(/d/)                        #=> false
+puts [nil, true, 99].my_any?(Integer)                     #=> true
+puts [nil, true, 99].my_any?                              #=> true
+puts [].my_any?
