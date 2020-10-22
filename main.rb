@@ -53,14 +53,27 @@ module Enumerable
     end
     false
   end
+
+  def my_none?(value = nil, &block)
+    !to_a.my_any?(value, &block)
+  end
 end
 
 
 puts "my_any test"
 
-puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
-puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
+puts %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
+puts %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
 puts %w[ant bear cat].my_any?(/d/)                        #=> false
 puts [nil, true, 99].my_any?(Integer)                     #=> true
 puts [nil, true, 99].my_any?                              #=> true
-puts [].my_any?
+puts [].my_any?                                           #=> false
+
+puts "my_none test"
+
+puts %w[ant bear cat].my_none? { |word| word.length >= 3 } #=> false
+puts %w[ant bear cat].my_none? { |word| word.length >= 4 } #=> false
+puts %w[ant bear cat].my_none?(/d/)                        #=> true
+puts [nil, true, 99].my_none?(Integer)                     #=> false
+puts [nil, true, 99].my_none?                              #=> false
+puts [].my_none?                                           #=> true
