@@ -18,4 +18,12 @@ module Enumerable
       count += 1
     end
   end
+
+  def my_select
+    return to_enum(:my_select) unless block_given?
+
+    n_array = []
+    to_a.my_each do |i| n_array << i if yield(item) end
+    n_array
+  end
 end
