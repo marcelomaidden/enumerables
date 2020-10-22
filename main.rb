@@ -26,4 +26,19 @@ module Enumerable
     to_a.my_each do |i| n_array << i if yield(item) end
     n_array
   end
+
+  def my_all?(value = nil)
+    if block_given?
+      to_a.my_each do |i| return false if yield(i) == false end
+      return true
+    elsif value.nil?
+      to_a.my_each do |i| return false if i.nil? || i == false end
+    else
+      to_a.my_each do |i| return false if i != value end
+    end
+    true
+  end
 end
+
+a = [2, 1, 2, 2]
+puts a.my_all?
