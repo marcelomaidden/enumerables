@@ -37,6 +37,10 @@ module Enumerable
       return true
     elsif value.nil?
       to_a.my_each { |i| return false if i.nil? || i == false }
+    elsif !value.nil? && (value.is_a? Class)
+      to_a.my_each { |i| return false unless [i.class, i.class.superclass].include?(value) }
+    elsif !value.nil? && value.class == Regexp
+      to_a.my_each { |i| return false unless value.match(i) }
     else
       to_a.my_each { |i| return false if i != value }
     end
@@ -45,10 +49,14 @@ module Enumerable
 
   def my_any?(param = nil)
     if block_given?
-      to_a.my_each { |i| return false if yield(i) == false && i.nil? }
-      return true
-    elsif to_a.my_each { |i| return false if i == false }
-      return true
+      to_a.my_each { |i| return true if yield(i) }
+      return false
+    elsif param.nil?
+      to_a.my_each { |i| return true if i }
+    elsif param.is_a? Class
+      to_a.my_each { |i| return true if [i.class, i.class.superclass].include? (param) }
+    elsif param.class == Regexp
+      to_a.my_each { |i| return true if i == param.march(i) }
     else
       to_a.my_each { |i| return true if i == param }
     end
@@ -59,7 +67,7 @@ module Enumerable
     !to_a.my_any?(value, &block)
   end
 
-  def my_count?(value = nil)
+  def my_count(value = nil)
     count = 0
     if block_given?
       to_a.my_each { |i| count += 1 if yield(i) }
@@ -115,6 +123,9 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
+
+true_array = [1, 0, 8, 4, 6, 8, 7, 2, 1, 7, 4, 0, 3, 0, 5, 2, 1, 2, 0, 0, 8, 8, 3, 3, 1, 0, 5, 7, 7, 7, 2, 1, 0, 4, 4, 7, 2, 5, 2, 6, 4, 0, 2, 7, 7, 2, 2, 8, 8, 6, 2, 4, 0, 6, 8, 0, 8, 7, 2, 0, 4, 8, 2, 1, 3, 3, 2, 0, 8, 3, 5, 1, 8, 7, 4, 7, 6, 4, 6, 6, 3, 8, 3, 5, 1, 0, 5, 8, 8, 0, 5, 4, 5, 5, 4, 5, 0, 1, 4, 2]
+puts true_array.my_any?(Numeric)
 
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
