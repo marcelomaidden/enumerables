@@ -1,3 +1,7 @@
+# rubocop:disable Metrics/PerceivedComplexity
+# rubocop:disable Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/MethodLength
+
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -23,33 +27,30 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
 
     n_array = []
-    to_a.my_each do |i| n_array << i if yield(i) end
+    to_a.my_each { |i| n_array << i if yield(i) }
     n_array
   end
 
   def my_all?(value = nil)
     if block_given?
-      to_a.my_each do |i| return false if yield(i) == false end
+      to_a.my_each { |i| return false if yield(i) == false }
       return true
     elsif value.nil?
-      to_a.my_each do |i| return false if i.nil? || i == false end
+      to_a.my_each { |i| return false if i.nil? || i == false }
     else
-      to_a.my_each do |i| return false if i != value end
+      to_a.my_each { |i| return false if i != value }
     end
     true
   end
 
   def my_any?(param = nil)
     if block_given?
-      to_a.my_each do |i| return false if yield(i) == false && i.nil? end
+      to_a.my_each { |i| return false if yield(i) == false && i.nil? }
       return true
-    elsif 
-      to_a.my_each do |i| return false if i == false end
+    elsif to_a.my_each { |i| return false if i == false }
       return true
-    elsif
-      to_a.my_each do |i| return true if i.class == param end
-    else 
-        to_a.my_each do |i| return true if i == param end
+    else
+      to_a.my_each { |i| return true if i == param }
     end
     false
   end
@@ -61,90 +62,56 @@ module Enumerable
   def my_count?(value = nil)
     count = 0
     if block_given?
-      to_a.my_each do |i| count += 1 if yield(i) end
+      to_a.my_each { |i| count += 1 if yield(i) }
     elsif value.nil?
       count = to_a.length
     else
-      count = to_a.my_select do |i| i == value end.length
+      count = to_a.my_select { |i| i == value }.length
     end
     count
   end
 
-  def my_map(value = nil)
-    return to_enum(:my_map) unless block_given? || !value.nil?
+  def my_map(proc = nil)
+    return to_enum(:my_map) unless block_given? || !proc.nil?
 
     array = []
-    if value.nil?
-      to_a.each do |i| array << yield(i) end
+    if proc.nil?
+      to_a.each { |i| array.push(yield(i)) }
     else
-      to_a.each do |i| array << value.call(i) end
+      to_a.each { |i| array.push(proc.call(i)) }
     end
     array
   end
 
-  def my_inject(param1=nil, param2=nil)
-    #only call my_inject without parameters and block
+  def my_inject(param1 = nil, param2 = nil)
+    # only call my_inject without parameters and block
     to_a.my_each do |storage|
-      if block_given? && !param1.nil? && param2.nil?
-        @result = @result.nil? ?
-        yield(param1, storage):
-        @result = yield(@result, storage)
-      elsif !block_given? && !param1.nil? && !param2.nil?
-       @result = @result.nil? ?
-       param1.send(param2, storage):
-       @result.send(param2, storage)
-      else
-        @result = @result.nil? ?
-        storage:
-         if !block_given? && param1.nil? && param2.nil?
-           @result = @result + storage
-         elsif !block_given? && param2.nil?
-           @result.send(param1, storage)
-         else
-           @result = yield(@result, storage)
-         end  
-        end
+      @result = if block_given? && !param1.nil? && param2.nil?
+                  if @result.nil?
+                    yield(param1, storage)
+                  else
+                    @result = yield(@result, storage)
+                  end
+                elsif !block_given? && !param1.nil? && !param2.nil?
+                  if @result.nil?
+                    param1.send(param2, storage)
+                  else
+                    @result.send(param2, storage)
+                  end
+                elsif @result.nil?
+                  storage
+                elsif !block_given? && param1.nil? && param2.nil?
+                  @result += storage
+                elsif !block_given? && param2.nil?
+                  @result.send(param1, storage)
+                else
+                  @result = yield(@result, storage)
+                end
     end
     @result
   end
 end
 
-
-puts "my_any test"
-
-puts %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
-puts %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
-puts %w[ant bear cat].my_any?(/d/)                        #=> false
-puts [nil, true, 99].my_any?(Integer)                     #=> true
-puts [nil, true, 99].my_any?                              #=> true
-puts [].my_any?                                           #=> false
-
-puts "my_none test"
-
-puts %w[ant bear cat].my_none? { |word| word.length >= 3 } #=> false
-puts %w[ant bear cat].my_none? { |word| word.length >= 4 } #=> false
-puts %w[ant bear cat].my_none?(/d/)                        #=> true
-puts [nil, true, 99].my_none?(Integer)                     #=> false
-puts [nil, true, 99].my_none?                              #=> false
-puts [].my_none?                                           #=> true
-
-puts "my_count?"
-
-puts %w[ant bear cat].my_count?
-puts %w[ant bear cat].my_count?("bear")
-puts %w[ant bear cat cat].my_count? { |n| n == "cat" }
-
-puts "my_map"
-
-puts [2, 3, 6].my_map { |n| n * 2 }
-
-puts "my_inject"
-
-# Sum some numbers
-# puts (5..10).my_inject(:+)                             #=> 45
-# # Same using a block and inject
-# puts (5..10).my_inject { |sum, n| sum + n }            #=> 45
-# # Multiply some numbers
-puts (5..10).my_inject(2, :*)                          #=> 151200
-# # Same using a block
-puts (5..10).my_inject(1) { |product, n| product * n }
+def multiply_els(array)
+  array.my_inject(:*)
+end
