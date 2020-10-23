@@ -3,24 +3,34 @@
 # rubocop:disable Metrics/PerceivedComplexity
 
 module Enumerable
-  def my_each
+  def my_each(block=nil)
     return to_enum(:my_each) unless block_given?
 
     count = 0
     while count < to_a.length
-      yield to_a[count]
+      if !block.nil?
+        block(to_a[count])
+      else
+        yield to_a[count]
+      end
       count += 1
     end
+    self
   end
 
-  def my_each_with_index
+  def my_each_with_index(block=nil)
     return to_enum(:my_each_with_index) unless block_given?
 
     count = 0
     while count < to_a.length
-      yield(to_a[count], count)
+      if !block.nil?
+        block(to_a[count], count)
+      else
+        yield(to_a[count], count)
+      end
       count += 1
     end
+    self
   end
 
   def my_select
@@ -42,7 +52,7 @@ module Enumerable
     elsif !value.nil? && value.class == Regexp
       to_a.my_each { |i| return false unless value.match(i) }
     else
-      to_a.my_each { |i| return false if i != value }
+      to_a.my_each { |i| return false if i != value}
     end
     true
   end
@@ -123,9 +133,6 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
-
-true_array = [1, 0, 8, 4, 6, 8, 7, 2, 1, 7, 4, 0, 3, 0, 5, 2, 1, 2, 0, 0, 8, 8, 3, 3, 1, 0, 5, 7, 7, 7, 2, 1, 0, 4, 4, 7, 2, 5, 2, 6, 4, 0, 2, 7, 7, 2, 2, 8, 8, 6, 2, 4, 0, 6, 8, 0, 8, 7, 2, 0, 4, 8, 2, 1, 3, 3, 2, 0, 8, 3, 5, 1, 8, 7, 4, 7, 6, 4, 6, 6, 3, 8, 3, 5, 1, 0, 5, 8, 8, 0, 5, 4, 5, 5, 4, 5, 0, 1, 4, 2]
-puts true_array.my_any?(Numeric)
 
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
