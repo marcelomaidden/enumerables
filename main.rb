@@ -82,17 +82,30 @@ module Enumerable
     array
   end
 
-  def my_inject(start=nil, smbl=nil)
-    if(start.is_a?(Symbol) || start.is_a?(String)) && smbl.nil?
-      smbl = start
-      start = nil
+  def my_inject(param1=nil, param2=nil)
+    #only call my_inject without parameters and block
+    to_a.my_each do |storage|
+      if block_given? && !param1.nil? && param2.nil?
+        @result = @result.nil? ?
+        yield(param1, storage):
+        @result = yield(@result, storage)
+      elsif !block_given? && !param1.nil? && !param2.nil?
+       @result = @result.nil? ?
+       param1.send(param2, storage):
+       @result.send(param2, storage)
+      else
+        @result = @result.nil? ?
+        storage:
+         if !block_given? && param1.nil? && param2.nil?
+           @result = @result + storage
+         elsif !block_given? && param2.nil?
+           @result.send(param1, storage)
+         else
+           @result = yield(@result, storage)
+         end  
+        end
     end
-    if !smbl.nil && !block_given?
-      to_a.my_each do |i| start = start.nil? ? i : start.send(smbl, i) end
-    else
-      to_a.my_each do |i| start = start.nil? ? i : yield(start, i) end
-    end
-    start
+    @result
   end
 end
 
@@ -128,10 +141,10 @@ puts [2, 3, 6].my_map { |n| n * 2 }
 puts "my_inject"
 
 # Sum some numbers
-(5..10).my_inject(:+)                             #=> 45
-# Same using a block and inject
-(5..10).my_inject { |sum, n| sum + n }            #=> 45
-# Multiply some numbers
-(5..10).my_inject(1, :*)                          #=> 151200
-# Same using a block
+# puts (5..10).my_inject(:+)                             #=> 45
+# # Same using a block and inject
+# puts (5..10).my_inject { |sum, n| sum + n }            #=> 45
+# # Multiply some numbers
+puts (5..10).my_inject(2, :*)                          #=> 151200
+# # Same using a block
 puts (5..10).my_inject(1) { |product, n| product * n }
