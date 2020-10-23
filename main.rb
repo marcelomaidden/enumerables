@@ -3,24 +3,34 @@
 # rubocop:disable Metrics/PerceivedComplexity
 
 module Enumerable
-  def my_each
+  def my_each(block=nil)
     return to_enum(:my_each) unless block_given?
 
     count = 0
     while count < to_a.length
-      yield to_a[count]
+      if !block.nil?
+        block(to_a[count])
+      else
+        yield to_a[count]
+      end
       count += 1
     end
+    self
   end
 
-  def my_each_with_index
+  def my_each_with_index(block=nil)
     return to_enum(:my_each_with_index) unless block_given?
 
     count = 0
     while count < to_a.length
-      yield(to_a[count], count)
+      if !block.nil?
+        block(to_a[count], count)
+      else
+        yield(to_a[count], count)
+      end
       count += 1
     end
+    self
   end
 
   def my_select
@@ -38,7 +48,7 @@ module Enumerable
     elsif value.nil?
       to_a.my_each { |i| return false if i.nil? || i == false }
     else
-      to_a.my_each { |i| return false if i != value }
+      to_a.my_each { |i| return false if i != value}
     end
     true
   end
@@ -115,6 +125,8 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
+
+puts [1,2,3].my_all?(Integer)
 
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
