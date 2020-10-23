@@ -82,41 +82,18 @@ module Enumerable
     array
   end
 
-  def my_inject(param1=nil, param2=nil, &block)
-    if block_given? && param1.nil?      
-      to_a.my_each do |storage|
-        @result = @result.nil? ?
-        storage:
-        @result = yield(storage, @result)
-      end
-    elsif !param1.nil? && param2.nil?
-      to_a.my_each do |storage|
-        @result = @result.nil? ?
-        storage:
-        storage = @result.send(@result, storage)
-      end
-    elsif !param1.nil? && !param2.nil?
-      puts param1, param2
+  def my_inject(start=nil, smbl=nil)
+    if(start.is_a?(Symbol) || start.is_a?(String)) && smbl.nil?
+      smbl = start
+      start = nil
+    end
+    if !smbl.nil && !block_given?
+      to_a.my_each do |i| start = start.nil? ? i : start.send(smbl, i) end
     else
-      to_a.my_each do |storage|
-        @result = yield(storage, @result)  
+      to_a.my_each do |i| start = start.nil? ? i : yield(start, i) end
     end
-    end
-    @result
+    start
   end
-
-  # def my_inject(initial = nil, sym = nil)
-  #   if (!initial.nil? && sym.nil?) && (initial.is_a?(Symbol) || initial.is_a?(String))
-  #     sym = initial
-  #     initial = nil
-  #   end
-  #   if !block_given? && !sym.nil?
-  #     to_a.my_each { |item| initial = initial.nil? ? item : initial.send(sym, item) }
-  #   else
-  #     to_a.my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
-  #   end
-  #   initial
-  # end
 end
 
 
