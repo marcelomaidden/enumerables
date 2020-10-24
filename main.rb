@@ -49,7 +49,7 @@ module Enumerable
     elsif value.nil?
       to_a.my_each { |i| return false if i.nil? || i == false }
     elsif !value.nil? && (value.is_a? Class)
-      to_a.my_each { |i| return false unless [i.class, i.class.superclass].include?(value) }
+      to_a.my_each { |i| return false unless i.is_a? value }
     elsif !value.nil? && value.instance_of?(Regexp)
       to_a.my_each { |i| return false unless value.match(i) }
     else
@@ -65,9 +65,9 @@ module Enumerable
     elsif param.nil?
       to_a.my_each { |i| return true if i }
     elsif param.is_a? Class
-      to_a.my_each { |i| return true if [i.class, i.class.superclass].include?(param) }
+      to_a.my_each { |i| return true if i.is_a? param }
     elsif param.instance_of?(Regexp)
-      to_a.my_each { |i| return true if i == param.march(i) }
+      to_a.my_each { |i| return true if i == param.match(i) }
     else
       to_a.my_each { |i| return true if i == param }
     end
