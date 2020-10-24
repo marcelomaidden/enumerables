@@ -1,9 +1,10 @@
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/CyclomaticComplexity
 # rubocop:disable Metrics/PerceivedComplexity
+# rubocop:disable Metrics/ModuleLength
 
 module Enumerable
-  def my_each(block=nil)
+  def my_each(block = nil)
     return to_enum(:my_each) unless block_given?
 
     count = 0
@@ -18,7 +19,7 @@ module Enumerable
     self
   end
 
-  def my_each_with_index(block=nil)
+  def my_each_with_index(block = nil)
     return to_enum(:my_each_with_index) unless block_given?
 
     count = 0
@@ -49,10 +50,10 @@ module Enumerable
       to_a.my_each { |i| return false if i.nil? || i == false }
     elsif !value.nil? && (value.is_a? Class)
       to_a.my_each { |i| return false unless [i.class, i.class.superclass].include?(value) }
-    elsif !value.nil? && value.class == Regexp
+    elsif !value.nil? && value.instance_of?(Regexp)
       to_a.my_each { |i| return false unless value.match(i) }
     else
-      to_a.my_each { |i| return false if i != value}
+      to_a.my_each { |i| return false if i != value }
     end
     true
   end
@@ -64,8 +65,8 @@ module Enumerable
     elsif param.nil?
       to_a.my_each { |i| return true if i }
     elsif param.is_a? Class
-      to_a.my_each { |i| return true if [i.class, i.class.superclass].include? (param) }
-    elsif param.class == Regexp
+      to_a.my_each { |i| return true if [i.class, i.class.superclass].include?(param) }
+    elsif param.instance_of?(Regexp)
       to_a.my_each { |i| return true if i == param.march(i) }
     else
       to_a.my_each { |i| return true if i == param }
@@ -137,3 +138,4 @@ end
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/PerceivedComplexity
+# rubocop:enable Metrics/ModuleLength
