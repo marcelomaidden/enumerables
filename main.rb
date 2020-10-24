@@ -119,7 +119,7 @@ module Enumerable
                 elsif @result.nil?
                   storage
                 elsif !block_given? && param1.nil? && param2.nil?
-                  @result += storage
+                  @result = yield(@result, storage)
                 elsif !block_given? && param2.nil?
                   @result.send(param1, storage)
                 else
