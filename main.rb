@@ -67,7 +67,7 @@ module Enumerable
     elsif param.is_a? Class
       to_a.my_each { |i| return true if i.is_a? param }
     elsif param.instance_of?(Regexp)
-      to_a.my_each { |i| return true if i == param.match(i) }
+      to_a.my_each { |i| return true unless param.match(i).nil? }
     else
       to_a.my_each { |i| return true if i == param }
     end
