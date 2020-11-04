@@ -20,7 +20,7 @@ module Enumerable
 
     count = 0
     while count < to_a.length
-        yield(to_a[count], count)
+      yield(to_a[count], count)
       count += 1
     end
     self
@@ -28,7 +28,7 @@ module Enumerable
 
   def my_select
     return to_enum(:my_select) unless block_given?
-    
+
     n_array = []
 
     to_a.my_each { |i| n_array << i if yield(i) }
