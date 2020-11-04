@@ -15,16 +15,12 @@ module Enumerable
     self
   end
 
-  def my_each_with_index(block = nil)
+  def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
     count = 0
     while count < to_a.length
-      if !block.nil?
-        block(to_a[count], count)
-      else
         yield(to_a[count], count)
-      end
       count += 1
     end
     self
