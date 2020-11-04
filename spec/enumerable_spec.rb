@@ -51,14 +51,14 @@ describe Enumerable do
 
       it { expect { arr2.my_each_with_index(3) { |item, index| puts item, index } }.to raise_error(ArgumentError) }
 
-      it do 
+      it do
         expect { arr2.my_each_with_index { |item, index| puts item, index } }
-        .to output("cat\n0\ndog\n1\nwombat\n2\n").to_stdout 
+          .to output("cat\n0\ndog\n1\nwombat\n2\n").to_stdout
       end
 
-      it do 
+      it do
         expect { arr2.my_each_with_index { |item, index| puts item, index } }
-        .not_to output("wombat\n0\ndog\n1\ncat\n2\n").to_stdout 
+          .not_to output("wombat\n0\ndog\n1\ncat\n2\n").to_stdout
       end
     end
   end
@@ -69,7 +69,7 @@ describe Enumerable do
 
       it { expect(arr.my_select(&:even?)).to contain_exactly(2, 4) }
 
-      it { expect(ha.my_select { |item| item == 'a' }).to contain_exactly(['a', 1])}
+      it { expect(ha.my_select { |item| item == 'a' }).to contain_exactly(['a', 1]) }
 
       it { expect(ra.my_select(&:even?)).to contain_exactly(2, 4, 6, 8, 10) }
 

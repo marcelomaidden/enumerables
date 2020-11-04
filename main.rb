@@ -31,10 +31,8 @@ module Enumerable
 
     n_array = []
 
-    to_a.my_each { |i| n_array << i if yield(i) }
+    to_a.my_each { |i| n_array << i if yield(i) || yield(i[0]) && instance_of?(Hash) }
 
-    to_a.my_each { |i| n_array << i if yield(i[0]) && self.class == Hash}
-    
     n_array
   end
 
