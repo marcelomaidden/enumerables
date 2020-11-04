@@ -32,6 +32,9 @@ module Enumerable
     n_array = []
 
     to_a.my_each { |i| n_array << i if yield(i) }
+
+    to_a.my_each { |i| n_array << i if yield(i[0]) && self.class == Hash}
+    
     n_array
   end
 
@@ -88,9 +91,9 @@ module Enumerable
 
     array = []
     if proc.nil?
-      to_a.each { |i| array.push(yield(i)) }
+      to_a.my_each { |i| array.push(yield(i)) }
     else
-      to_a.each { |i| array.push(proc.call(i)) }
+      to_a.my_each { |i| array.push(proc.call(i)) }
     end
     array
   end
