@@ -33,7 +33,7 @@ module Enumerable
 
     to_a.my_each { |i| n_array << i if yield(i) || yield(i[0]) && instance_of?(Hash) }
 
-    n_array
+    instance_of?(Hash)?(n_array.to_h):n_array
   end
 
   def my_all?(value = nil)

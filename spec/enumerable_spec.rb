@@ -69,7 +69,7 @@ describe Enumerable do
 
       it { expect(arr.my_select(&:even?)).to contain_exactly(2, 4) }
 
-      it { expect(ha.my_select { |item| item == 'a' }).to contain_exactly(['a', 1]) }
+      it { expect(ha.my_select { |item| item == 'a' }).to be_instance_of(Hash) }
 
       it { expect(ra.my_select(&:even?)).to contain_exactly(2, 4, 6, 8, 10) }
 
