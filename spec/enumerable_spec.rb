@@ -82,4 +82,30 @@ describe Enumerable do
       it { expect(arr.my_select(&:even?)).not_to contain_exactly(1, 3) }
     end
   end
+
+  describe '#my_all?' do
+    let(:arr3) { %w[ant bear cat] }
+    # let(:arr3) {['a', 'a', 12]}
+    let(:arr4) { [nil, true, 99] }
+
+    context 'Cheks if my_all nethod is working properly' do
+      it do
+        expect(arr3.my_all? { |word| word.length >= 3 })
+          .to be_eql(arr3.all? { |word| word.length >= 3 })
+      end
+
+      it do
+        expect(arr3.my_all? { |word| word.length >= 4 })
+          .to be_eql(arr3.all? { |word| word.length >= 4 })
+      end
+
+      it { expect(arr3.my_all?(/t/)).to be_eql(arr3.all?(/t/)) }
+
+      it { expect(arr3.my_all?(String)).to be_eql(arr3.all?(String)) }
+
+      it { expect(arr4.my_all?).to be_eql(arr4.all?) }
+
+      it { expect([].my_all?).to be_eql([].all?) }
+    end
+  end
 end
