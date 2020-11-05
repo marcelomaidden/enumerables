@@ -106,6 +106,11 @@ describe Enumerable do
       it { expect(arr4.my_all?).to be_eql(arr4.all?) }
 
       it { expect([].my_all?).to be_eql([].all?) }
+
+      it do
+        expect((1..3).my_all?(&proc { |x| x == 0 }))
+          .to be_equal((1..3).all?(&proc { |x| x == 0 }))
+      end
     end
   end
 
@@ -132,6 +137,37 @@ describe Enumerable do
       it do
         expect((1..3).my_any?(&proc { |x| x == 0 }))
           .to be_equal((1..3).any?(&proc { |x| x == 0 }))
+      end
+    end
+  end
+
+  describe '#my_none?' do
+    context 'Testing my_none method' do
+      it do
+        expect(arr3.my_none? { |word| word.length == 5 })
+          .to be_eql(arr3.none? { |word| word.length == 5 })
+      end
+
+      it do
+        expect(arr3.my_none? { |word| word.length >= 4 })
+          .to be_eql(arr3.none? { |word| word.length >= 4 })
+      end
+
+      it { expect(arr3.my_none?(/d/)).to be_eql(arr3.none?(/d/)) }
+
+      it { expect(arr3.my_none?(String)).to be_eql(arr3.none?(String)) }
+
+      it { expect([].my_none?).to be_eql([].none?) }
+
+      it { expect([nil].my_none?).to be_eql([nil].none?) }
+
+      it { expect([nil, false].my_none?).to be_eql([nil, false].none?) }
+
+      it { expect([nil, false, true].my_none?).to be_eql([nil, false, true].none?) }
+
+      it do
+        expect((1..3).my_none?(&proc { |num| num.even? }))
+          .to be_equal((1..3).none?(&proc { |num| num.even? }))
       end
     end
   end
