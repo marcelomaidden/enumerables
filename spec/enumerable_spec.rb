@@ -193,13 +193,40 @@ describe Enumerable do
     context 'Checks my_map method and its returns' do
       it { expect([1, 2, 3].my_map { |x| x * 2 }).to be_eql([1, 2, 3].map { |x| x * 2 }) }
 
-      it { expect((1..4).my_map { |i| i * i }).to be_eql((1..4).map { |i| i * i }) }
+      it { expect((1..4).my_map { |i| i**2 }).to be_eql((1..4).map { |i| i**2 }) }
 
       it { expect((1..4).my_map { 'cat' }).to be_eql((1..4).map { 'cat' }) }
 
       it { expect((1..3).my_map(&proc { |num| num + 1 })).to be_eql((1..3).map(&proc { |num| num + 1 })) }
 
       it { expect([1, 2, 3].my_map(&proc { |x| x % 2 })).to be_eql([1, 2, 3].map(&proc { |x| x % 2 })) }
+    end
+  end
+
+  describe '#my_inject' do
+    context 'Checks my_inject method and its return' do
+      it { expect((5..10).my_inject(:+)).to be_equal((5..10).inject(:+)) }
+
+      it do
+        expect((5..10).my_inject { |sum, n| sum + n })
+          .to be_equal((5..10).inject { |sum, n| sum + n })
+      end
+
+      it { expect((5..10).my_inject(1, :*)).to be_equal((5..10).inject(1, :*)) }
+
+      it do
+        expect((5..10).my_inject(2) { |product, n| product * n })
+          .to be_equal((5..10).inject(2) { |product, n| product * n })
+      end
+
+      it do
+        expect(%w[cat sheep bear biggest].my_inject do |memo, word|
+          memo.length > word.length ? memo : word
+        end)
+          .to be_eql(%w[cat sheep bear biggest].inject do |memo, word|
+                       memo.length > word.length ? memo : word
+                     end)
+      end
     end
   end
 end
