@@ -188,4 +188,18 @@ describe Enumerable do
       end
     end
   end
+
+  describe '#my_map' do
+    context 'Checks my_map method and its returns' do
+      it { expect([1, 2, 3].my_map { |x| x * 2 }).to be_eql([1, 2, 3].map { |x| x * 2 }) }
+
+      it { expect((1..4).my_map { |i| i * i }).to be_eql((1..4).map { |i| i * i }) }
+
+      it { expect((1..4).my_map { 'cat' }).to be_eql((1..4).map { 'cat' }) }
+
+      it { expect((1..3).my_map(&proc { |num| num + 1 })).to be_eql((1..3).map(&proc { |num| num + 1 })) }
+
+      it { expect([1, 2, 3].my_map(&proc { |x| x % 2 })).to be_eql([1, 2, 3].map(&proc { |x| x % 2 })) }
+    end
+  end
 end
