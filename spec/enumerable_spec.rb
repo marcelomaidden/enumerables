@@ -171,4 +171,21 @@ describe Enumerable do
       end
     end
   end
+
+  describe '#my_count' do
+    context 'Checks if method my_count counts right the elements in a collection' do
+      it { expect(arr.my_count).to be_equal(arr.count) }
+
+      it { expect(arr.my_count(2)).to be_equal(arr.count(2)) }
+
+      it { expect(arr.my_count(&:even?)).to be_equal(arr.count(&:even?)) }
+
+      it { expect(arr3.my_count).to be_equal(arr3.count) }
+
+      it do
+        expect((1..3).my_count(&proc { |num| num.even? }))
+          .to be_equal((1..3).count(&proc { |num| num.even? }))
+      end
+    end
+  end
 end
