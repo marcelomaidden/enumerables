@@ -29,7 +29,7 @@ After that install rspec by typing the command below:
 
 In order to test our project type the command below:
 
-  rspec --format doc
+    rspec --format doc
 
 ## Authors
 
