@@ -9,6 +9,10 @@ describe Enumerable do
 
   let(:arr) { [1, 2, 3, 4] }
 
+  let(:arr3) { %w[ant bear cat] }
+
+  let(:arr4) { [nil, true, 99] }
+
   describe '#my_each' do
     context 'Runs my_each towards and enum' do
       it { expect(arr.my_each).to be_instance_of(Enumerator) }
@@ -84,11 +88,7 @@ describe Enumerable do
   end
 
   describe '#my_all?' do
-    let(:arr3) { %w[ant bear cat] }
-    # let(:arr3) {['a', 'a', 12]}
-    let(:arr4) { [nil, true, 99] }
-
-    context 'Cheks if my_all nethod is working properly' do
+    context 'Checks if my_all nethod is working properly' do
       it do
         expect(arr3.my_all? { |word| word.length >= 3 })
           .to be_eql(arr3.all? { |word| word.length >= 3 })
@@ -106,6 +106,33 @@ describe Enumerable do
       it { expect(arr4.my_all?).to be_eql(arr4.all?) }
 
       it { expect([].my_all?).to be_eql([].all?) }
+    end
+  end
+
+  describe '#my_any?' do
+    context 'Checks all returns from my_any? method' do
+      it do
+        expect(arr3.my_any? { |word| word.length >= 3 })
+          .to be_eql(arr3.any? { |word| word.length >= 3 })
+      end
+
+      it do
+        expect(arr3.my_any? { |word| word.length >= 4 })
+          .to be_eql(arr3.any? { |word| word.length >= 4 })
+      end
+
+      it { expect(arr3.my_any?(/t/)).to be_eql(arr3.any?(/t/)) }
+
+      it { expect(arr3.my_any?(Integer)).to be_eql(arr3.any?(Integer)) }
+
+      it { expect(arr4.my_any?).to be_eql(arr4.any?) }
+
+      it { expect([].my_any?).to be_eql([].any?) }
+
+      it do
+        expect((1..3).my_any?(&proc { |x| x == 0 }))
+          .to be_equal((1..3).any?(&proc { |x| x == 0 }))
+      end
     end
   end
 end
