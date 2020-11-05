@@ -4,31 +4,23 @@
 # rubocop:disable Metrics/ModuleLength
 
 module Enumerable
-  def my_each(block = nil)
+  def my_each
     return to_enum(:my_each) unless block_given?
 
     count = 0
     while count < to_a.length
-      if !block.nil?
-        block(to_a[count])
-      else
-        yield to_a[count]
-      end
+      yield to_a[count]
       count += 1
     end
     self
   end
 
-  def my_each_with_index(block = nil)
+  def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
     count = 0
     while count < to_a.length
-      if !block.nil?
-        block(to_a[count], count)
-      else
-        yield(to_a[count], count)
-      end
+      yield(to_a[count], count)
       count += 1
     end
     self
@@ -38,8 +30,10 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
 
     n_array = []
-    to_a.my_each { |i| n_array << i if yield(i) }
-    n_array
+
+    to_a.my_each { |i| n_array << i if yield(i) || yield(i[0]) && instance_of?(Hash) }
+
+    instance_of?(Hash) ? n_array.to_h : n_array
   end
 
   def my_all?(value = nil)
@@ -95,9 +89,9 @@ module Enumerable
 
     array = []
     if proc.nil?
-      to_a.each { |i| array.push(yield(i)) }
+      to_a.my_each { |i| array.push(yield(i)) }
     else
-      to_a.each { |i| array.push(proc.call(i)) }
+      to_a.my_each { |i| array.push(proc.call(i)) }
     end
     array
   end

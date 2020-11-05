@@ -15,7 +15,21 @@
 
 ## Live Demo
 
-[Live Demo Link](https://repl.it/repls/ActiveSevereScientists )
+[Live Demo Link](https://repl.it/repls/PricklyTalkativeCloudcomputing#README.md)
+
+## installation
+
+You MUST have Ruby installed in your system. If you don't have it installed you can go this page [Install Ruby](https://www.theodinproject.com/courses/web-development-101/lessons/installing-ruby)
+
+After that install rspec by typing the command below:
+
+    gem install rspec
+
+## how-to-test
+
+In order to test our project type the command below:
+
+    rspec --format doc
 
 ## Authors
 
@@ -30,6 +44,12 @@
 - GitHub: [@marcelomaidden](https://github.com/marcelomaidden)
 - Twitter: [@marcelomaidden](https://twitter.com/marcelomaidden)
 - LinkedIn: [Marcelo Fernandes de Araújo](https://www.linkedin.com/in/marcelo-fernandes-de-ara%C3%BAjo-56700a171/)
+
+👤 **Alan Soto**
+
+- Github: [@AlanSoto31](https://github.com/AlanSoto31)
+- Twitter: [@Alan95081574](https://twitter.com/Alan95081574)
+- Linkedin: [linkedin Profile](https://www.linkedin.com/in/alan-soto-valle-b9a0511aa/)
 
 ## Acknowledgements
 - Ruby creators
